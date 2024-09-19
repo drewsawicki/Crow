@@ -1,0 +1,49 @@
+﻿@model Crow.ViewModels.PhotoUploadViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    var userBirdId = ViewBag.UserBirdId;
+}
+
+<h2>Upload Photo</h2>
+
+<form asp-action="Create" asp-controller="Photos" enctype="multipart/form-data" method="post">
+    <!-- Hidden field for UserBirdId -->
+    <input type="hidden" asp-for="Photo.UserBirdId" value="@userBirdId" />
+
+    <!-- Photo Upload -->
+    <div class="form-group">
+        <label asp-for="File" class="control-label">Choose a photo to upload:</label>
+        <input asp-for="File" type="file" class="form-control" required />
+        <span asp-validation-for="File" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Photo.Location" class="control-label">Location (optional):</label>
+        <input asp-for="Photo.Location" class="form-control" />
+        <span asp-validation-for="Photo.Location" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Photo.Date" class="control-label">Date (optional):</label>
+        <input asp-for="Photo.Date" type="date" class="form-control" />
+        <span asp-validation-for="Photo.Date" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Photo.Time" class="control-label">Time (optional):</label>
+        <input asp-for="Photo.Time" type="time" class="form-control" />
+        <span asp-validation-for="Photo.Time" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Photo.Notes" class="control-label">Notes (optional):</label>
+        <textarea asp-for="Photo.Notes" class="form-control"></textarea>
+        <span asp-validation-for="Photo.Notes" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>
+
+<!-- Navigation -->
+<a asp-action="Index" asp-route-id="@userBirdId" class="btn btn-secondary mt-3">Back to Photos</a>

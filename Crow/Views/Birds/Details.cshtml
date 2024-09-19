@@ -1,0 +1,32 @@
+﻿@model Crow.Models.Bird
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CommonName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CommonName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ScientificName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ScientificName)
+        </dd>
+    </dl>
+</div>
+<a class="btn btn-primary w-25" asp-action="AddToLifeList" asp-route-id="@Model?.Id">
+    Add to life list
+</a>
+<div class="mt-2">
+    <a asp-action="Index">Back to List</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.Id"> Edit</a>
+</div>

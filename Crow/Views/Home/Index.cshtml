@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Crow.Models.UserBird>
+
+@{
+    ViewData["Title"] = "Home Page";
+    var numBirds = ViewBag.NumBirds;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Crow</h1>
+    <img src="~/Images/logo.png" alt="Logo" class="img-fluid" style="max-width: 75px; margin: 20px;" />
+    <p>Your personal life list tracker.</p>
+    <div class="row justify-content-center align-items-center mt-5">
+        <div class="flex-column p-3 fs-4">
+            Your total life list count:
+        </div>
+        <div class="col-3 fs-4">
+            @numBirds
+        </div>
+    </div>
+</div>

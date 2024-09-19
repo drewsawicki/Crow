@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Crow.Models.Photo>
+
+@{
+    ViewData["Title"] = "Index";
+    var userBirdId = ViewBag.UserBirdId;
+    var birdCommonName = ViewBag.BirdCommonName;
+}
+
+<h1>@birdCommonName Photos</h1>
+
+<p>
+    <a 
+        class="btn btn-primary rounded-1"
+        asp-action="Create" 
+        asp-route-userBirdId="@userBirdId">Upload Photo
+    </a>
+</p>
+<div class="photo-gallery">
+    @if (Model.Any())
+    {  
+        <div class="photo-gallery">
+            @foreach (var item in Model)
+            {
+                <div class="photo-gallery-item">
+                    <a asp-action="Details" asp-route-id="@item.Id">
+                        <img src="@Url.Action("DisplayPhoto", "Photos", new { id = item.Id })" alt="@item.FileName" style="width:200px; height:200px;" />
+                    </a>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No photos available for this bird.</p>
+    }
+</div>
+
+<a asp-controller="UserBirds" asp-action="Index" class="btn btn-secondary mt-3">Back</a>

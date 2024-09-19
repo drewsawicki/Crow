@@ -1,0 +1,44 @@
+﻿@model Crow.Models.Photo
+
+@{
+    ViewData["Title"] = "Details";
+    var userBirdId = ViewBag.UserBirdId;
+}
+
+<h1>Details</h1>
+
+<div>
+    <img src="@Url.Action("DisplayPhoto", "Photos", new { id = Model.Id })" alt="@Model.FileName" style="width:200px; height:200px;" />
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Location)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Location)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Time)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Time)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a> |
+    <a asp-action="Index" asp-route-id="@userBirdId" class="btn btn-secondary mt-3">Back to Photos</a>
+</div>

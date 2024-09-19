@@ -1,0 +1,115 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@font-face {
+    font-family: 'Nacelle-Heavy'; /* Name to reference the font in your CSS */
+    src: url('../nacelle_100/Nacelle-Heavy.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nacelle-Regular'; /* Name to reference the font in your CSS */
+    src: url('../nacelle_100/Nacelle-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'YourFontName'; /* Name to reference the font in your CSS */
+    src: url('~/fonts/YourFontFile.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    font-family: 'Nacelle-Regular';
+    margin-bottom: 60px;
+}
+
+.btn-custom {
+    background-color: white; /* Replace with your desired background color */
+    color: #7313aa; /* Text color */
+    border-color: #7313aa
+}
+
+    .btn-custom:hover {
+        background-color: #f1e9f5; /* Optional: Hover effect */
+        color: #7313aa; /* Text color */
+    }
+
+.crow-primary {
+    color: #6586AB;
+}
+
+.crow-icon-btn {
+    background-color: #6586AB;
+    color: white;
+}
+    .crow-icon-btn:hover {
+        background-color: #4F6B8A; /* Optional: Hover effect */
+        color: white; /* Text color */
+    }
+.search-bar-custom {
+    height:50px;
+}
+
+.search-bar-btn {
+    border-radius: 50px;
+}
+
+.photo-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px; /* Space between photos */
+    justify-content: space-between;
+}
+
+.photo-gallery-item {
+    flex: 0 0 calc(33.33% - 16px); /* 3 items per row */
+    box-sizing: border-box;
+    margin-bottom: 16px;
+}
+
+    .photo-gallery-item img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+.photo-title {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 16px;
+}
+
+input.form-control {
+    border-color: #9EACC4;
+    border-radius: 50px;
+}
+
+    input.form-control:focus {
+        box-shadow: none; /* Remove the blue shadow border */
+        border-color: #4F6B8A; /* Optional: You can also set border color to transparent */
+    }
+
+.navbar {
+    background: linear-gradient(135deg, hsla(212, 35%, 58%, 1) 23%, hsla(218, 24%, 69%, 1) 100%);
+    color: white;
+}
