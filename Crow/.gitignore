@@ -1,0 +1,19 @@
+﻿# Ignore build output directories
+bin/
+obj/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore publish folder
+wwwroot/lib/
+wwwroot/node_modules/
+
+# Ignore other unneeded files
+.vscode/
+.DS_Store
+.vs/
+node_modules/
