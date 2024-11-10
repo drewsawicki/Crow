@@ -1,67 +1,147 @@
-﻿@model IEnumerable<Crow.Models.UserBird>
+﻿@model PaginatedList<Crow.Models.UserBird>
 
 @{
     ViewData["Title"] = "Index";
+    var sortOrder = ViewBag.SortOrder;
+    var searchString = ViewBag.SearchString;
+    var filters = ViewBag.Filters;
 }
 
-<h1 class="text-center mt-5">My Birds</h1>
+<div class="d-flex justify-content-between align-items-center align-text-bottom mt-4">
+    <h2 class="page-header">Life List</h2>
 
-@using (Html.BeginForm())
-{
-    <div class="d-flex justify-content-center mt-4">
-        <div class="col-12 col-md-6">
-            <div class="input-group search-bar-custom">
-                @Html.TextBox("SearchString", null, new { @class = "form-control" })
-                <button type="submit" class="btn crow-icon-btn search-bar-btn">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-            </div>
+<!-- Sort Button -->
+    @using (Html.BeginForm())
+    {
+        <div class="d-flex align-items-center">
+            <!-- Search Bar -->
+            <form asp-action="Index" method="get">
+                <div class="input-wrapper rounded-pill">
+                    <button type="submit" class="btn crow-btn-primary color-3 search rounded-circle">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <input type="text" name="searchString" placeholder="Search..." value="@ViewBag.SearchString" />
+                    <a class="btn close-btn rounded-circle" asp-action="Index" asp-route-sortOrder="com" asp-route-searchString="">
+                        <i class="fa-solid fa-times"></i>
+                    </a>
+                </div>
+            </form>
         </div>
-    </div>
-}
+    }
+</div>
 
-<div class="card border-0 mt-4">
-    <div class="card-body">
-        <div class="row text-center fw-bold">
-            <div class="col-md-4">
-                @Html.ActionLink("Common Name", "Index", new { sortOrder = ViewBag.CommonSortParam })
-            </div>
-            <div class="col-md-4">
-                @Html.ActionLink("Scientific Name", "Index", new { sortOrder = ViewBag.ScientificSortParam })
-            </div>
-            <div class="col-md-4">
-                Actions
-            </div>
-        </div>
-    </div>
- </div>
+<div class="d-flex align-items-center justify-content-start mt-5">
+        <button class="btn sort-btn dropdown-toggle ms-0 rounded-pill" type="button" id="sortMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        Sort
+    </button>
+        
+    <ul class="dropdown-menu" aria-labelledby="sortMenuButton">
+        @if (sortOrder != "com")
+        {
+            <li>
+                @Html.ActionLink("Common Name", "Index", new { sortOrder = "com", searchString = searchString }, new { @class = "dropdown-item" })
+            </li>
+        } 
+        @if (sortOrder != "com_desc")
+        {
+            <li>
+                @Html.ActionLink("Common Name (z-a)", "Index", new { sortOrder = "com_desc", searchString = searchString }, new { @class = "dropdown-item" })
+            </li>
+        } 
+        @if (sortOrder != "sci")
+        {
+            <li>
+                @Html.ActionLink("Scientific Name", "Index", new { sortOrder = "sci", searchString = searchString }, new { @class = "dropdown-item" })
+            </li>
+        } 
+        @if (sortOrder != "sci_desc")
+        {
+            <li>
+                @Html.ActionLink("Scientific Name (z-a)", "Index", new { sortOrder = "sci_desc", searchString = searchString }, new { @class = "dropdown-item" })
+            </li>
+        } 
+    </ul>
 
-@foreach (var item in Model)
-{
-    <div class="card">
-        <div class="card-body">
-            <div class="row justify-content-center text-center">
-                <div class="col-4">@Html.DisplayFor(modelItem => item.Bird.CommonName)</div>
-                <div class="col-4 fst-italic align-middle">@Html.DisplayFor(modelItem => item.Bird.ScientificName)</div>
-                <div class="col-4">
-                    <div class="btn-group" role="group">
-                        <a class="btn crow-icon-btn" asp-controller="Photos" asp-action="Index" asp-route-id="@item.Id">
-                            <i class="fa-regular fa-images"></i>
-                        </a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">
-                            <i class="fa-solid fa-trash"></i>
+    <button class="btn sort-btn dropdown-toggle ms-1 rounded-pill" type="button" id="filterMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        Filter
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="filterMenuButton">
+        <li>
+            @Html.ActionLink("Favorites", "Index", new { sortOrder = sortOrder, searchString = searchString, filters = "fav" }, new { @class = "dropdown-item" })
+        </li>
+        <li>
+            @Html.ActionLink("Has photos", "Index", new { sortOrder = sortOrder, searchString = searchString, filters = "photo" }, new { @class = "dropdown-item" })
+        </li>
+    </ul>
+        
+</div>
+
+<div class="card-background">
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body p-2">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title mb-0" style="max-width:80%; word-wrap: break-word;">
+                                @Html.DisplayFor(modelItem => item.Bird.CommonName)
+                            </h5>
+                            <div class="dropdown">
+                                <h5 class="card-title mb-0" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; flex-shrink: 0;">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </h5>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-favorite" asp-action="Favorite" asp-route-id="@item.Id">Favorite</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="card-text mt-2">@Html.DisplayFor(modelItem => item.Bird.ScientificName)</p>
+                    </div>
+                    <div class="d-flex p-2 mt-2">
+                        <a class="photos-link" asp-controller="Photos" asp-action="Index" asp-route-id="@item.Id">
+                            Photos
+                            <i class="fa-solid fa-angle-right"></i>
                         </a>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-}
 
-<div>
+        }
+    </div>
+</div>
+
+<div class="mt-5">
     @if (Model == null || !Model.Any())
     {
         <p class="text-muted">No birds yet.</p>
     }
 </div>
 
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<div class="page-btn-nav justify-content-center ms-0">
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-searchString="@searchString"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn crow-btn-secondary @prevDisabled">
+        <i class="fa-solid fa-angle-left"></i>
+    </a>
+    <a asp-action="Index"
+       asp-route-sortOrder=@sortOrder
+       asp-route-searchString="@searchString"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       class="btn crow-btn-secondary @nextDisabled">
+        <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>

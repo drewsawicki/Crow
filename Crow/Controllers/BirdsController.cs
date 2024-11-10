@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using System.Runtime.InteropServices;
+using System.Drawing.Printing;
 
 namespace Crow.Controllers
 {
@@ -27,7 +28,7 @@ namespace Crow.Controllers
         }
 
         // GET: Birds
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
 
             // Get the logged-in user's ID
@@ -39,8 +40,9 @@ namespace Crow.Controllers
                                     .Select(ub => ub.BirdId)
                                     .ToList();
 
-            ViewBag.CommonSortParam = String.IsNullOrEmpty(sortOrder) ? "com_desc" : "";
-            ViewBag.ScientificSortParam = sortOrder == "sci" ? "sci_desc" : "sci";
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.SearchString = searchString;
+            
             var birds = from b in _context.Bird select b;
 
             if (!String.IsNullOrEmpty(searchString))
@@ -61,14 +63,15 @@ namespace Crow.Controllers
                     birds = birds.OrderByDescending(b => b.ScientificName);
                     break;
                 default:
+                    ViewBag.SortOrder = "com";
                     birds = birds.OrderBy(b => b.CommonName);
                     break;
             }
 
-            // Create a ViewModel to hold the birds and the user's bird IDs
+            int pageSize = 16;
             var viewModel = new BirdIndexViewModel
             {
-                Birds = await birds.ToListAsync(),
+                Birds = await PaginatedList<Bird>.CreateAsync(birds.AsNoTracking(), pageNumber ?? 1, pageSize),
                 UserBirdIds = userBirdIds
             };
 

@@ -7,36 +7,48 @@
 
 <h1>Details</h1>
 
-<div>
-    <img src="@Url.Action("DisplayPhoto", "Photos", new { id = Model.Id })" alt="@Model.FileName" style="width:200px; height:200px;" />
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Location)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Time)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Time)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Notes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Notes)
-        </dd>
-    </dl>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Left Column for Photo -->
+        <div class="col-md-6 details-photo">
+            <img src="@Url.Action("DisplayPhoto", "Photos", new { id = Model.Id })" alt="Photo" class="img-fluid shadow-sm" style="width: 100%; max-width: 500px;" />
+        </div>
+
+        <!-- Right Column for Photo Information -->
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Location)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Location)
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Date)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Date)
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Time)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Time)
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Notes)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Notes)
+                </dd>
+            </dl>
+        </div>
+    </div>
 </div>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a> |

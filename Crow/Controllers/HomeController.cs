@@ -39,6 +39,7 @@ namespace Crow.Controllers
             }
 
             ViewBag.NumBirds = numBirds;
+            ViewData["BodyClass"] = "home-page";
             return View();
 
         }

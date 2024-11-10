@@ -15,12 +15,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\BaseController.cs" />
     <Compile Remove="Controllers\SightingsController.cs" />
     <Compile Remove="Models\Sighting.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="Views\Birds\ShowSearchForm.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove=".gitignore" />
   </ItemGroup>
 
   <ItemGroup>

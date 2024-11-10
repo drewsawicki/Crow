@@ -9,6 +9,7 @@ using Crow.Data;
 using Crow.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Crow.Controllers
 {
@@ -24,16 +25,18 @@ namespace Crow.Controllers
         }
 
         // GET: UserBirds
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string searchString, string filters, int? pageNumber)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return Unauthorized();
             }
-           
-            ViewBag.CommonSortParam = String.IsNullOrEmpty(sortOrder) ? "com_desc" : "";
-            ViewBag.ScientificSortParam = sortOrder == "sci" ? "sci_desc" : "sci";
+
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.SearchString = searchString;
+            ViewBag.Filters = filters;
+
             var userBirds = from ub in _context.UserBird select ub;
 
             if (!String.IsNullOrEmpty(searchString))
@@ -51,6 +54,17 @@ namespace Crow.Controllers
                     .Where(ub => ub.UserId == user.Id);
             }
 
+            if (filters == "fav")
+            {
+                userBirds = userBirds
+                    .Where(ub => ub.Favorite == true);
+            }
+            if (filters == "photo")
+            {
+                userBirds = userBirds
+                    .Where(ub => ub.Photos.Count() == 0);
+            }
+
             switch (sortOrder)
             {
                 case "com_desc":
@@ -63,31 +77,13 @@ namespace Crow.Controllers
                     userBirds = userBirds.OrderByDescending(ub => ub.Bird.ScientificName);
                     break;
                 default:
+                    ViewBag.SortOrder = "com";
                     userBirds = userBirds.OrderBy(ub => ub.Bird.CommonName);
                     break;
             }
 
-            return View(userBirds);
-        }
-
-        // GET: Birds/ShowSearchForm
-        public async Task<IActionResult> ShowSearchForm()
-        {
-            return View();
-        }
-
-        // POST: Birds/ShowSearchResults
-        public async Task<IActionResult> ShowSearchResults(String SearchPhrase)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-            return View("Index", await _context.UserBird
-                .Where(ub => ub.Bird.CommonName.Contains(SearchPhrase) && ub.UserId == user.Id)
-                .Include(ub => ub.Bird)
-                .ToListAsync());
+            int pageSize = 12;
+            return View(await PaginatedList<UserBird>.CreateAsync(userBirds.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: UserBirds/Details/5
@@ -179,6 +175,28 @@ namespace Crow.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(userBird);
+        }
+
+        public async Task<IActionResult> Favorite(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var userBird = await _context.UserBird
+                .FirstOrDefaultAsync(ub => ub.Id == id);
+
+            if (userBird == null)
+            {
+                return NotFound();
+            }
+
+            userBird.Favorite = true;
+            _context.Update(userBird);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: UserBirds/Delete/5

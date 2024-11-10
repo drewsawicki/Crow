@@ -158,6 +158,9 @@ namespace Crow.Data.Migrations
                     b.Property<int>("BirdId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Favorite")
+                        .HasColumnType("bit");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");

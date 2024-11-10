@@ -19,14 +19,17 @@ namespace Crow.Models
 
         public int BirdId { get; set; }
 
+        public bool Favorite { get; set; }
+
         public Bird Bird { get; set; } = null!;
 
-        public ICollection<Photo>? Photos { get; set; } = [];
+        public ICollection<Photo> Photos { get; set; } = [];
 
         public UserBird()
         {
             UserId = "";
             BirdId = 0;
+            Favorite = false;
         }
     }
 }

@@ -58,6 +58,23 @@ namespace Crow.Controllers
             return File(fileBytes, "image/jpeg");
         }
 
+        public IActionResult GetPhotoInfo(int id)
+        {
+            var photo = _context.Photo.Find(id); // Fetch the photo from your service or database
+            if (photo == null)
+            {
+                return NotFound();
+            }
+
+            return Json(new
+            {
+                location = photo.Location,
+                date = photo.Date,
+                time = photo.Time,
+                notes = photo.Notes
+            });
+        }
+
         // GET: Photos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -152,7 +169,11 @@ namespace Crow.Controllers
                 return NotFound();
             }
 
-            var photo = await _context.Photo.FindAsync(id);
+            var photo = await _context.Photo
+                .Where(p => p.Id == id)
+                .Include(p => p.UserBird)
+                .FirstOrDefaultAsync();
+
             if (photo == null)
             {
                 return NotFound();
@@ -175,11 +196,31 @@ namespace Crow.Controllers
                 return NotFound();
             }
 
+            var existingPhoto = await _context.Photo
+               .Include(p => p.UserBird) 
+
+               .FirstOrDefaultAsync(p => p.Id == id);
+            if (existingPhoto == null)
+            {
+                return NotFound();
+            }
+
+            ModelState.Remove(nameof(photo.FileName));
+            ModelState.Remove(nameof(photo.FilePath));
+            ModelState.Remove(nameof(photo.UserBird));
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(photo);
+                    // Update the existing photo with the new values
+                    existingPhoto.Location = photo.Location;
+                    existingPhoto.Date = photo.Date;
+                    existingPhoto.Time = photo.Time;
+                    existingPhoto.Notes = photo.Notes;
+
+
+                    _context.Update(existingPhoto); // Update the existing photo
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -193,10 +234,13 @@ namespace Crow.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index", new { Id = photo.UserBirdId });
+                return RedirectToAction("Index", new { Id = existingPhoto.UserBirdId });
             }
+
             return View(photo);
         }
+
+
 
         // GET: Photos/Delete/5
         public async Task<IActionResult> Delete(int? id)
